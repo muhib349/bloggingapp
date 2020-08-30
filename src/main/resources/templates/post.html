@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <div th:replace="/fragments/header :: header-css"/>
+</head>
+<body>
+
+<div th:replace="/fragments/header :: header"/>
+
+<div class="container">
+
+    <div class="alert alert-danger" th:if="${username} and ${!post.approved}">Your post isn't approved yet. Wait for admin approval!</div>
+    <!--Post-->
+    <div class="jumbotron">
+        <h1 th:text="${post.title}">Title</h1>
+        <div th:text="'Created: ' + ${#dates.format(post.createdAt, 'dd-MMM-yyyy')} + ' by '">Created by</div>
+        <div><a th:text="${post.user.username}" th:href="@{'/blog/' + ${post.user.username}}">User</a></div>
+        <h3 th:text="${post.body}">Body</h3>
+
+        <!--Only show these buttons if the user is the owner of post-->
+        <div class="row">
+            <div sec:authorize="isAuthenticated()" th:if="${username}">
+                <a th:href="@{'/editPost/{id}'(id=${post.id})}" class="col-md-2">
+                    <button type="button" class="btn btn-primary btn-block" th:text="Edit">Edit</button>
+                </a>
+
+                <a th:href="@{'/deletePost/{id}'(id=${post.id})}" class="col-md-2">
+                    <button type="button" class="btn btn-danger btn-block" th:text="Delete">Delete</button>
+                </a>
+            </div>
+            <a sec:authorize="isAuthenticated()" th:if="${post.approved}" th:href="@{'/createComment/{post_id}'(post_id=${post.id})}" class="col-md-2">
+                <button type="button" class="btn btn-info btn-block" th:text="Comment">Comment</button>
+            </a>
+
+        </div>
+
+    </div>
+
+    <h2>Comments:</h2>
+
+    <!--Comments-->
+    <div class="well" th:each="comment : ${post.comments}">
+        <h3 th:text="${comment.body}">Body</h3>
+        <div th:text="'Created: ' + ${#dates.format(comment.createdAt, 'dd-MMM-yyyy')} + ' by '">
+            Created by
+        </div>
+        <div><a th:text="${comment.user.username}" th:href="@{'/blog/' + ${comment.user.username}}">User</a>
+        </div>
+    </div>
+
+</div>
+
+
+</body>
+</html>

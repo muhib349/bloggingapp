@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Manage User</title>
+    <div th:replace="/fragments/header :: header-css"></div>
+
+</head>
+<body>
+
+<div th:replace="/fragments/header :: header"></div>
+
+<div class="container">
+    <div class="alert alert-danger" th:if="${#lists.isEmpty(users)}">No user available!</div>
+
+    <table th:if="${!#lists.isEmpty(users)}" class="table" >
+        <thead class="thead-light">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Username</th>
+            <th scope="col">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user, iteration : ${users}">
+            <th th:text="${iteration.index + 1}" scope="row">1</th>
+            <td th:text="${user.name}">Name</td>
+            <td th:text="${user.email}">Email</td>
+            <td th:text="${user.username}">Email</td>
+            <td th:switch="${user.active}">
+                <form th:case="false" action="#"  th:action="@{/admin/approveUser/}" method="post">
+                    <input type="hidden" name="user_id" th:value="${user.id}" />
+                    <button  class="btn btn-info" type="submit">Approved</button>
+                </form>
+
+                <form th:case="true" action="#" th:action="@{/admin/deactivateUser/}" method="post">
+                    <input type="hidden" name="user_id" th:value="${user.id}" />
+                    <button  class="btn btn-danger" type="submit">Deactivate</button>
+                </form>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

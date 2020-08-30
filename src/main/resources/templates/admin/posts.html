@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Manage Post</title>
+    <div th:replace="/fragments/header :: header-css"></div>
+
+</head>
+<body>
+
+<div th:replace="/fragments/header :: header"></div>
+
+<div class="container">
+    <div class="alert alert-danger" th:if="${#lists.isEmpty(posts)}">No post available!</div>
+    <div class="alert alert-success" th:if="${successMessage}" th:utext="${successMessage}"></div>
+
+    <table th:if="${!#lists.isEmpty(posts)}" class="table" >
+        <thead class="thead-light">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Post Owner</th>
+            <th scope="col">Created At</th>
+            <th scope="col">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="post, iteration : ${posts}">
+            <th th:text="${iteration.index + 1}" scope="row">1</th>
+            <td th:text="${post.title}">title</td>
+            <td th:text="${post.user.name}">Owner</td>
+            <td th:text="${#dates.format(post.createdAt, 'dd-MMM-yyyy')}">Created At</td>
+            <td th:switch="${post.approved}">
+                <form th:case="false" action="#"  th:action="@{/admin/approvePost/}" method="post">
+                    <input type="hidden" name="post_id" th:value="${post.id}" />
+                    <button  class="btn btn-info" type="submit">Approved</button>
+                </form>
+
+                <form th:case="true" action="#" th:action="@{'/admin/deletePost/{id}'(id=${post.id})}" method="get">
+                    <button  class="btn btn-danger" type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
