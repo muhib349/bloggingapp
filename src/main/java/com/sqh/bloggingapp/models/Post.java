@@ -32,6 +32,12 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private Collection<Comment> comments;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    private Collection<Like> likes;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    private Collection<Dislike> dislikes;
+
     public int getId() {
         return id;
     }
@@ -78,5 +84,21 @@ public class Post extends BaseEntity {
 
     public void setComments(Collection<Comment> comments) {
         this.comments = comments;
+    }
+
+    public Collection<Like> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Collection<Like> likes) {
+        this.likes = likes;
+    }
+
+    public Collection<Dislike> getDislikes() {
+        return dislikes;
+    }
+
+    public void setDislikes(Collection<Dislike> dislikes) {
+        this.dislikes = dislikes;
     }
 }

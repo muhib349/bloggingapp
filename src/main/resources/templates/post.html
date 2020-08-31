@@ -29,6 +29,21 @@
                     <button type="button" class="btn btn-danger btn-block" th:text="Delete">Delete</button>
                 </a>
             </div>
+
+            <form sec:authorize="isAuthenticated()" th:if="${post.approved}"  th:action="@{/saveLike}" method="post">
+                <input type="hidden" name="post_id" th:value="${post.id}" />
+                <a class="col-md-2">
+                    <button type="submit" class="btn btn-group btn-block" th:text="'Like (' + ${#lists.size(post.likes)}+')'">Like</button>
+                </a>
+            </form>
+
+            <form sec:authorize="isAuthenticated()" th:if="${post.approved}"  th:action="@{/saveDislike}" method="post">
+                <input type="hidden" name="post_id" th:value="${post.id}" />
+                <a class="col-md-2">
+                    <button type="submit" class="btn btn-danger btn-block" th:text="'Dislike('+${#lists.size(post.dislikes)}+ ')'">Dislike</button>
+                </a>
+            </form>
+
             <a sec:authorize="isAuthenticated()" th:if="${post.approved}" th:href="@{'/createComment/{post_id}'(post_id=${post.id})}" class="col-md-2">
                 <button type="button" class="btn btn-info btn-block" th:text="Comment">Comment</button>
             </a>
